@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Art Gallery</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="assets/kalaimagal.ico" type="image/x-icon">
+
+    <!-- Font Awesome Link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <!-- External CSS File -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="home-body">
+    <!-- Header Section Start -->
+    <div id="header-placeholder"></div>
+    <!-- Header Section End -->
+
+    <!-- Main Content Start -->
+    <main class="hero-main" style="background-image: url('assets/wall-bg.jpg');">
+        <div class="hero">
+            <div id="image-track" data-mouse-down-at="0" data-prev-percentage="0">
+                <img src="assets/3.jpg" class="image" draggable="false">
+                <img src="assets/5.jpg" class="image" draggable="false">
+                <img src="assets/7.jpg" class="image" draggable="false">
+                <img src="assets/9.jpg" class="image" draggable="false">
+                <img src="assets/10.jpg" class="image" draggable="false">
+                <img src="assets/11.jpg" class="image" draggable="false">
+                <img src="assets/12.jpg" class="image" draggable="false">
+                <img src="assets/0.jpg" class="image" draggable="false">
+                <img src="assets/1.jpg" class="image" draggable="false">
+                <img src="assets/13.jpg" class="image" draggable="false">
+            </div>
+        </div>
+        <div class="alert-box">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            <strong>Grab Image And Move Horizontaly!!!</strong>
+        </div>
+    </main>
+    <div class="image-view">
+        <div class="slides">
+            <img src="assets/3.jpg" class="image-slide i1">
+            <img src="assets/5.jpg" class="image-slide i2">
+            <img src="assets/7.jpg" class="image-slide i3">
+            <img src="assets/9.jpg" class="image-slide i4">
+            <img src="assets/10.jpg" class="image-slide i5">
+            <img src="assets/11.jpg" class="image-slide i6">
+            <img src="assets/12.jpg" class="image-slide i7">
+            <img src="assets/0.jpg" class="image-slide i8">
+            <img src="assets/1.jpg" class="image-slide i9">
+            <img src="assets/13.jpg" class="image-slide i10">
+        </div>
+    </div>
+    <!-- Main Content End -->
+
+    <!-- Footer Section Start -->
+    <div id="footer-placeholder"></div>
+    <!-- Footer Section End -->
+
+    <script src="js/script.js" defer></script>
+    <script>
+        // This script only for home page hero section.
+        // Hero Image Slider
+        const track = document.getElementById("image-track");
+
+        // Event Mouse Down
+        window.onmousedown = (e) => {
+            track.dataset.mouseDownAt = e.clientX;
+        };
+
+        // Event Mouse Up
+        window.onmouseup = () => {
+            track.dataset.mouseDownAt = "0";
+            track.dataset.prevPercentage = track.dataset.percentage;
+        }
+
+        // Event Mouse Move
+        window.onmousemove = e => {
+            // if Mouse Up
+            if (track.dataset.mouseDownAt === "0") return;
+
+            const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX,
+                maxDelta = window.innerWidth / 2;
+
+            const percentage = (mouseDelta / maxDelta) * -100,
+                nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage,
+                nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
+
+            track.dataset.percentage = nextPercentage;
+
+            track.animate({
+                transform: `translate(${nextPercentage}%, -50%)`
+            }, { duration: 1500, fill: "forwards" });
+
+            for (const image of track.getElementsByClassName("image")) {
+                image.animate({
+                    objectPosition: `${100 + nextPercentage}% center`
+                }, { duration: 1500, fill: "forwards" });
+            }
+        }
+    </script>
+</body>
+
+</html>
